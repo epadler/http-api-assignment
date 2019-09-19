@@ -1,0 +1,26 @@
+{
+  "name": "http-api-assignment",
+  "version": "1.0.0",
+  "description": "first assignment",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/epadler/http-api-assignment.git"
+  },
+  "author": "Ethan Adler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/epadler/http-api-assignment/issues"
+  },
+  "homepage": "https://github.com/epadler/http-api-assignment#readme",
+  "dependencies": {
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
