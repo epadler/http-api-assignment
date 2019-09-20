@@ -10,39 +10,33 @@ const jsonHandler = require('./jsonResponses.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const onRequest = (request, response) => {
+    let parsedURL = url.parse(request.url);
     // const responseJSON = {};
-    switch (url.parse(request.url)) {
+    switch (parsedURL.pathname) {
         case '/':
             htmlHandler.getIndex(request, response);
             // jsonHandler.respondJSON(request, response, 200, responseJSON);
             break;
         case '/success':
-            htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 200);
+            jsonHandler.success(request, response);
             break;
         case '/badRequest':
-            htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 401);
+            jsonHandler.success(request, response, query.parse(parsedUrl.query));
             break;
         case '/unauthorized':
-            htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 401);
+            // jsonHandler.respondJSON(request, response, 401);
             break;
         case '/forbidden':
-            htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 403);
+            // jsonHandler.respondJSON(request, response, 403);
             break;
         case '/internal':
-            htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 500);
+            // jsonHandler.respondJSON(request, response, 500);
             break;
         case '/notImplemented':
-            htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 501);
+            // jsonHandler.respondJSON(request, response, 501);
             break;
         default:
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 404);
             break;
                                   }
 };

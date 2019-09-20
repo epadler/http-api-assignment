@@ -9,6 +9,7 @@
 //function to parse our response
 const parseJSON = (xhr, content) => {
     //parse response (obj will be empty in a 204 updated)
+    console.dir(xhr.response);
     const obj = JSON.parse(xhr.response);
     console.dir(obj);
 
@@ -24,22 +25,23 @@ const handleResponse = (xhr) => {
     const content = document.querySelector('#content');
 
     if(type === 'application/json') {
+        console.dir(xhr.response);
         //parse the response text into a JSON object
         const obj = JSON.parse(xhr.response);
         //add the json fields to our html elements
-        h1.textContent = `Name: ${obj.name}`;
-        p.textContent = `Age: ${obj.age}`; 
+        // h1.textContent = `Name: ${obj.name}`;
+        // p.textContent = `Age: ${obj.age}`; 
     } //if response was in xml
     else if (type === 'text/xml') {
         //grab the name tag and age tag from our responseXML
         //This will only work if the responding XML is completely valid.
         //Otherwise the responseXML field will be null
-        const name = xhr.responseXML.querySelector('name').textContent;
-        const age = xhr.responseXML.querySelector('age').textContent;
+        // const name = xhr.responseXML.querySelector('name').textContent;
+        // const age = xhr.responseXML.querySelector('age').textContent;
 
         //add the xml fields to our html elements
-        h1.textContent = `Name: ${name}`;
-        p.textContent = `Age: ${age}`
+        // h1.textContent = `Name: ${name}`;
+        // p.textContent = `Age: ${age}`
     }
     //check the status code
     switch(xhr.status) {
@@ -78,51 +80,18 @@ const sendAjax = (url, acceptedType) => {
       //send our ajax request to the server
       xhr.send();
     };
-//function to send our post request
-const sendPost = (e, requestForm, typeForm) => {
-    // console.dir('sendPost');
-    //grab the forms action (url to go to)
-    //and method (HTTP method - POST in this case)
-    const action = requestForm.getAttribute('action');
-    const method = requestForm.getAttribute('method');
 
-    //grab the form's name and age fields so we can check user input
-    const reqeuestField = requestForm.querySelector('#selected');
-    const typeField = typeForm.querySelector('#selected');
-
-    //create a new Ajax request (remember this is asynchronous)
-    const xhr = new XMLHttpRequest();
-    //set the method (POST) and url (action field from form)
-    xhr.open(method, action);
-
-    //This type has the same format as query strings key=value&key2=value2
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    //set our requested response type in hopes of a JSON response
-    xhr.setRequestHeader ('Accept', 'application/json');
-
-    //set our function to handle the response
-    xhr.onload = () => handleResponse(xhr);
-
-
-    const formData = `valid=${true}&loggedIn=yes`;
-
-    //send our request with the data
-    xhr.send(formData);
-
-    //prevent the browser's default action (to send the form on its own)
-    e.preventDefault();
-    //return false to prevent the browser from trying to change page
-    return false;
-};
 const init = () => {
     //grab form
-    const requestForm = document.querySelector('#page');
-    const typeForm = document.querySelector('#type');
     const button = document.querySelector('#send');
 
 
     //create handler
-    const requestFunc = (e) => sendPost(e, requestForm, typeForm);
+    const requestFunc = () => {
+        const requestUrl = document.querySelector('#page').value;
+        const acceptedType = document.querySelector('#type').value;  
+        sendAjax(requestUrl, acceptedType);
+    };
 
     //attach submit event (for clicking submit or hitting enter)
     button.addEventListener('click', requestFunc);
@@ -134,7 +103,7 @@ window.onload = init;
     <body>
         <section id="top">
             <h3>Status Code Tests</h3>
-            <select id="page" action="/addUser" method="post">
+            <select id="page">
                 <option value="/success">Success</option>
                 <option value="/badRequest">Bad Request</option>
                 <option value="/unauthorized">Unauthorized</option>
