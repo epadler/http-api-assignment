@@ -10,7 +10,7 @@ const jsonHandler = require('./jsonResponses.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const onRequest = (request, response) => {
-    const responseJSON = {};
+    // const responseJSON = {};
     switch (url.parse(request.url)) {
         case '/':
             htmlHandler.getIndex(request, response);
@@ -18,31 +18,31 @@ const onRequest = (request, response) => {
             break;
         case '/success':
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 200, responseJSON);
+            jsonHandler.respondJSON(request, response, 200);
             break;
         case '/badRequest':
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 401, responseJSON);
+            jsonHandler.respondJSON(request, response, 401);
             break;
         case '/unauthorized':
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 401, responseJSON);
+            jsonHandler.respondJSON(request, response, 401);
             break;
         case '/forbidden':
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 403, responseJSON);
+            jsonHandler.respondJSON(request, response, 403);
             break;
         case '/internal':
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 500, responseJSON);
+            jsonHandler.respondJSON(request, response, 500);
             break;
         case '/notImplemented':
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 501, responseJSON);
+            jsonHandler.respondJSON(request, response, 501);
             break;
         default:
             htmlHandler.getIndex(request, response);
-            jsonHandler.respondJSON(request, response, 404, responseJSON);
+            jsonHandler.respondJSON(request, response, 404);
             break;
                                   }
 };
