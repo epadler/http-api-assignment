@@ -23,6 +23,24 @@ const parseJSON = (xhr, content) => {
 const handleResponse = (xhr) => {
     const content = document.querySelector('#content');
 
+    if(type === 'application/json') {
+        //parse the response text into a JSON object
+        const obj = JSON.parse(xhr.response);
+        //add the json fields to our html elements
+        h1.textContent = `Name: ${obj.name}`;
+        p.textContent = `Age: ${obj.age}`; 
+    } //if response was in xml
+    else if (type === 'text/xml') {
+        //grab the name tag and age tag from our responseXML
+        //This will only work if the responding XML is completely valid.
+        //Otherwise the responseXML field will be null
+        const name = xhr.responseXML.querySelector('name').textContent;
+        const age = xhr.responseXML.querySelector('age').textContent;
+
+        //add the xml fields to our html elements
+        h1.textContent = `Name: ${name}`;
+        p.textContent = `Age: ${age}`
+    }
     //check the status code
     switch(xhr.status) {
         case 200: //success
@@ -44,6 +62,22 @@ const handleResponse = (xhr) => {
     //parse response 
     parseJSON(xhr, content);
 };
+
+const sendAjax = (url, acceptedType) => {
+      //create a new xhr (ajax) request. 
+      //Remember that these are ASYNCHRONOUS
+      const xhr = new XMLHttpRequest();
+      //set the xhr to a GET request to a certain URL
+      xhr.open('GET', url);
+      //Set the accept headers to the desired response mime type
+      //Server does NOT have to support this. It is a gentle request.
+      xhr.setRequestHeader ("Accept", acceptedType);
+      //When the xhr loads, call handleResponse and pass the xhr object
+      xhr.onload = () => handleResponse(xhr);
+      
+      //send our ajax request to the server
+      xhr.send();
+    };
 //function to send our post request
 const sendPost = (e, requestForm, typeForm) => {
     // console.dir('sendPost');
