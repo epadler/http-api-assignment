@@ -21,7 +21,7 @@ const onRequest = (request, response) => {
             jsonHandler.success(request, response);
             break;
         case '/badRequest':
-            jsonHandler.success(request, response, query.parse(parsedUrl.query));
+            jsonHandler.success(request, response, query.parse(parsedURL.query));
             break;
         case '/unauthorized':
             // jsonHandler.respondJSON(request, response, 401);
