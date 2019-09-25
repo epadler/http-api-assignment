@@ -9,36 +9,29 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+const urlStruct = {
+    '/': htmlHandler.getIndex,
+    '/style.css':htmlHandler.getCSS,
+    '/success':jsonHandler.success,
+    '/badRequest':jsonHandler.badRequest,
+    notFound: htmlHandler.getIndex,
+};
+
 const onRequest = (request, response) => {
     let parsedURL = url.parse(request.url);
-    // const responseJSON = {};
-    switch (parsedURL.pathname) {
-        case '/':
-            htmlHandler.getIndex(request, response);
-            // jsonHandler.respondJSON(request, response, 200, responseJSON);
-            break;
-        case '/success':
-            jsonHandler.success(request, response);
-            break;
-        case '/badRequest':
-            jsonHandler.success(request, response, query.parse(parsedURL.query));
-            break;
-        case '/unauthorized':
-            // jsonHandler.respondJSON(request, response, 401);
-            break;
-        case '/forbidden':
-            // jsonHandler.respondJSON(request, response, 403);
-            break;
-        case '/internal':
-            // jsonHandler.respondJSON(request, response, 500);
-            break;
-        case '/notImplemented':
-            // jsonHandler.respondJSON(request, response, 501);
-            break;
-        default:
-            htmlHandler.getIndex(request, response);
-            break;
-                                  }
+    
+    let params = query.parse(parsedURL.query);
+    
+    const type = request.headers.accept.split(',')[0];
+    
+    if(urlStruct[parsedURL.pathname])
+        {
+            urlStruct[parsedURL.pathname](request, response, type, params);
+        }
+    else{
+        urlStruct.notFound(request, response);
+    }
+    
 };
 
 http.createServer(onRequest).listen(port);

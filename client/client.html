@@ -6,97 +6,38 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
         <script type="text/babel">
-//function to parse our response
-const parseJSON = (xhr, content) => {
-    //parse response (obj will be empty in a 204 updated)
-    console.dir(xhr.response);
-    const obj = JSON.parse(xhr.response);
-    console.dir(obj);
+        const handleResponse = (xhr) => {
+            console.dir(xhr.response);
+        };
 
-    //if message in response, add to screen
-    if(obj.message) {
-        const p = document.createElement('p');
-        p.textContent = `Message: ${obj.message}`;
-        content.appendChild(p);
-    }
-};
-//function to handle our response
-const handleResponse = (xhr) => {
-    const content = document.querySelector('#content');
+        const sendAjax = (url, type) => {
+            const xhr = new XMLHttpRequest();
+            
+            xhr.open('GET', url);
+            xhr.setRequestHeader("Accept", type);
+            
+            xhr.onload = () => {
+                handleResponse(xhr);
+            };
+            
+            xhr.send();
+        };
 
-    if(type === 'application/json') {
-        console.dir(xhr.response);
-        //parse the response text into a JSON object
-        const obj = JSON.parse(xhr.response);
-        //add the json fields to our html elements
-        // h1.textContent = `Name: ${obj.name}`;
-        // p.textContent = `Age: ${obj.age}`; 
-    } //if response was in xml
-    else if (type === 'text/xml') {
-        //grab the name tag and age tag from our responseXML
-        //This will only work if the responding XML is completely valid.
-        //Otherwise the responseXML field will be null
-        // const name = xhr.responseXML.querySelector('name').textContent;
-        // const age = xhr.responseXML.querySelector('age').textContent;
+        const init = () => {
+            const sendButton = document.querySelector('#send');
+            
+            const sendRequest = () => {
+                const url = document.querySelector('#page').value;
+                const type = document.querySelector('#type').value;
+                sendAjax(url, type);
+            };
+            
+            sendButton.addEventListener('click', sendRequest);
+        }
 
-        //add the xml fields to our html elements
-        // h1.textContent = `Name: ${name}`;
-        // p.textContent = `Age: ${age}`
-    }
-    //check the status code
-    switch(xhr.status) {
-        case 200: //success
-            content.innerHTML = `<b>Success</b>`;
-            break;
-        case 201: //created
-            content.innerHTML = '<b>Create</b>';
-            break;
-        case 204: //updated (no response back from server)
-            content.innerHTML = '<b>Updated (No Content)</b>';
-            return;
-        case 400: //bad request
-            content.innerHTML = `<b>Bad Request</b>`;
-            break;
-        default: //any other status code
-            content.innerHTML = `Error code not implemented by client.`;
-            break;
-                     }
-    //parse response 
-    parseJSON(xhr, content);
-};
+        window.onload = init;
 
-const sendAjax = (url, acceptedType) => {
-      //create a new xhr (ajax) request. 
-      //Remember that these are ASYNCHRONOUS
-      const xhr = new XMLHttpRequest();
-      //set the xhr to a GET request to a certain URL
-      xhr.open('GET', url);
-      //Set the accept headers to the desired response mime type
-      //Server does NOT have to support this. It is a gentle request.
-      xhr.setRequestHeader ("Accept", acceptedType);
-      //When the xhr loads, call handleResponse and pass the xhr object
-      xhr.onload = () => handleResponse(xhr);
-      
-      //send our ajax request to the server
-      xhr.send();
-    };
-
-const init = () => {
-    //grab form
-    const button = document.querySelector('#send');
-
-
-    //create handler
-    const requestFunc = () => {
-        const requestUrl = document.querySelector('#page').value;
-        const acceptedType = document.querySelector('#type').value;  
-        sendAjax(requestUrl, acceptedType);
-    };
-
-    //attach submit event (for clicking submit or hitting enter)
-    button.addEventListener('click', requestFunc);
-};
-window.onload = init;
+        
 
         </script>
     </head>
